@@ -1,5 +1,5 @@
 # PSP2-batteryFixer
-A small kernel plugin that fixes most of PSVita's battery-related problems.
+A small kernel plugin for enso that fixes most of PSVita's battery-related problems.
 <br>
 Basically the result is the same as hardware-disconnecting the battery or using a syscon keycombo.
 <br>
