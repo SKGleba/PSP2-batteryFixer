@@ -1,16 +1,40 @@
 # PSP2-batteryFixer
-A small kernel plugin for enso that fixes most of PSVita's battery-related problems.
+A small utility that fixes most of PSVita's battery-related problems.
 <br>
-Basically the result is the same as hardware-disconnecting the battery or using a syscon keycombo.
-<br>
-As a bonus it deletes all the temp flags from the battery chip.
+It deletes all the temp flags from the battery chip and hard-resets all devices.
+</br>
+
+![ref0](https://github.com/SKGleba/PSP2-batteryFixer/raw/master/screen/screen1.jpg)
+
 # Usage
-1) Put the plugin (bicr.skprx) in ur0:tai/ or ux0:tai/
-2) Add the plugin path in tai config.txt under '\*KERNEL'
-    - i.e: *ur0:tai/bicr.skprx*
-3) Reboot, the vita will shutdown itself
-4) Turn on the vita. Now you should be asked to set the current date and time
-    - if you were asked - the fix worked
-5) Remove the plugin path from tai config.txt
-    - you may notice that the *bicr.skprx* is no longer present, its normal.
- 
+1) Install the VPK with VitaShell
+2) Start the batteryFixer app
+3) Follow the instructions displayed on your Vita screen.
+
+# Credits
+	- Xerpi for plugin loader and baremetal loader/sample
+	- Dots-tb and the team behind LOLIcon
+	- Team Molecule for enso and taiHen.
+	
+# Important notice
+```
+///////////////////////////////////////////////////////////////////-
+///////////////////////////// WARNING /////////////////////////////-
+///////////////////////////////////////////////////////////////////-
+
+0) USE AT YOUR OWN RISK.
+1) If you don't know what the tool does - do not use it.
+2) My tools apparently: 
+	- brick the target device/system or cause its malfunction,
+	- steal your personal data even if its offline-only, 
+	- they are ransomware/spyware/memeware etc,
+	- will give you a heart attack,
+	- or -VITA ONLY- any other bullshit told by storytellers@henkaku
+discord server ( https://discord.gg/m7QGqj5 , ask for "xCorra" or 
+"Samilop Iter", DO NOT mention the vitadock scam or muslim attacks).
+3) If you think that the above is true then go back in line, sheep.
+
+///////////////////////////////////////////////////////////////////-
+///////////////////////////// WARNING /////////////////////////////-
+///////////////////////////////////////////////////////////////////-
+```

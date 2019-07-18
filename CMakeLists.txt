@@ -1,34 +1,94 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_SYSTEM_NAME "Generic")
-set(CMAKE_C_COMPILER "arm-vita-eabi-gcc")
-set(CMAKE_CXX_COMPILER "arm-vita-eabi-g++")
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+  if(DEFINED ENV{VITASDK})
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
+  else()
+    message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
+  endif()
+endif()
+
+project(batteryFixer)
+set(TITLE_ID "SKGB4TF1X")
+set(TITLE_NAME "batteryFixer")
+
+include("${VITASDK}/share/vita.cmake" REQUIRED)
+
+enable_language(C ASM)
 
 set(CMAKE_C_FLAGS "-Wl,-q -Wall -O3 -std=gnu99")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11 -fno-rtti -fno-exceptions")
+
+include_directories(
+)
 
 link_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
 )
 
-add_executable(bicr.elf
-	main.c
+add_executable(app.elf
+	app/main.c
+	app/debugScreenFont.c
 )
 
-target_link_libraries(bicr.elf
-	taihenForKernel_stub
-	SceThreadmgrForDriver_stub
-	SceIofilemgrForDriver_stub
-	taihenModuleUtils_stub
-	)
-
-set_target_properties(bicr.elf
-	PROPERTIES LINK_FLAGS "-nostdlib"
-	COMPILE_FLAGS "-D__VITA_KERNEL__"
+target_link_libraries(app.elf
+	taihen_stub
+	SceDisplay_stub
+	SceCtrl_stub
 )
 
-add_custom_target(bicr.skprx ALL
-	COMMAND vita-elf-create -e ${CMAKE_SOURCE_DIR}/bicr.yml bicr.elf bicr.velf
-	COMMAND vita-make-fself -c bicr.velf bicr.skprx
+add_custom_target(app.velf ALL
+	COMMAND vita-elf-create app.elf app.velf
 )
-add_dependencies(bicr.skprx bicr.elf)
+
+add_custom_target(eboot.bin ALL
+	COMMAND vita-make-fself -c app.velf eboot.bin
+)
+
+add_custom_target(${PROJECT_NAME}.vpk ALL
+	COMMAND vita-mksfoex -s TITLE_ID=${TITLE_ID} "${TITLE_NAME}" param.sfo
+	COMMAND vita-pack-vpk -s param.sfo -b eboot.bin -a bicr.skprx=bicr.skprx 
+	-a payload/final/bicr.bin=bicr.bin -a res/icon0.png=sce_sys/icon0.png ${PROJECT_NAME}.vpk
+)
+
+add_dependencies(app.velf app.elf)
+add_dependencies(eboot.bin app.velf)
+add_dependencies(${PROJECT_NAME}.vpk eboot.bin)
+
+add_executable(bicr
+  payload/pre/payload_bootstrap_bin.o
+  plugin/resume.S
+  plugin/main.c
+  plugin/blit.c
+  plugin/font.c
+)
+
+target_link_libraries(bicr
+  SceSysmemForDriver_stub
+  SceSysrootForDriver_stub
+  SceKernelUtilsForDriver_stub
+  SceCpuForDriver_stub
+  SceThreadmgrForDriver_stub
+  SceIofilemgrForDriver_stub
+  SceDisplayForDriver_stub
+  SceSysclibForDriver_stub
+  SceSysrootForKernel_stub
+  SceDipswForDriver_stub
+  taihenModuleUtils_stub
+  taihenForKernel_stub
+  SceSysconForDriver_stub
+  SceCpuForDriver_stub
+  ScePervasiveForDriver_stub
+  ScePowerForDriver_stub
+  k
+  gcc
+)
+
+set_target_properties(bicr
+  PROPERTIES LINK_FLAGS "-nostdlib"
+)
+
+vita_create_self(bicr.skprx bicr
+  CONFIG plugin/exports.yml
+  UNSELF
+)
