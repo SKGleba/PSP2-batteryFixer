@@ -3,6 +3,9 @@ A small utility that fixes most of PSVita's battery-related problems.
 <br>
 It deletes all the temp flags from the battery chip and hard-resets all devices.
 </br>
+<br>
+This tool was tested on firmwares 3.52 - 3.70.
+</br>
 
 ![ref0](https://github.com/SKGleba/PSP2-batteryFixer/raw/master/screen/screen1.jpg)
 
