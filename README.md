@@ -10,6 +10,8 @@ It deletes all the temp flags from the battery chip and hard-resets all devices.
 1) Install the VPK with VitaShell
 2) Start the batteryFixer app
 3) Follow the instructions displayed on your Vita screen.
+	- If you don't see any text, and your vita doesn't power off after 5 seconds, press START.
+	- batteryFixer also creates a log file in ```ur0:temp/batteryFixer.log```.
 
 # Credits
 	- Xerpi for plugin loader and baremetal loader/sample
