@@ -1,9 +1,6 @@
 /*
 	PSP VSH 24bpp text bliter
 */
-#include <libk/stdarg.h>
-#include <libk/stdio.h>
-#include <libk/string.h>
 
 
 #include "blit.h"

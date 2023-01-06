@@ -48,7 +48,7 @@ add_custom_target(eboot.bin ALL
 add_custom_target(${PROJECT_NAME}.vpk ALL
 	COMMAND vita-mksfoex -s TITLE_ID=${TITLE_ID} "${TITLE_NAME}" param.sfo
 	COMMAND vita-pack-vpk -s param.sfo -b eboot.bin -a bicr.skprx=bicr.skprx 
-	-a payload/final/bicr.bin=bicr.bin -a res/icon0.png=sce_sys/icon0.png ${PROJECT_NAME}.vpk
+	-a res/icon0.png=sce_sys/icon0.png ${PROJECT_NAME}.vpk
 )
 
 add_dependencies(app.velf app.elf)
@@ -56,14 +56,13 @@ add_dependencies(eboot.bin app.velf)
 add_dependencies(${PROJECT_NAME}.vpk eboot.bin)
 
 add_executable(bicr
-  payload/pre/payload_bootstrap_bin.o
-  plugin/resume.S
-  plugin/main.c
-  plugin/blit.c
-  plugin/font.c
+  kernel/main.c
+  kernel/blit.c
+  kernel/font.c
 )
 
 target_link_libraries(bicr
+  SceDebugForDriver_stub
   SceSysmemForDriver_stub
   SceSysrootForDriver_stub
   SceKernelUtilsForDriver_stub
@@ -74,8 +73,6 @@ target_link_libraries(bicr
   SceSysclibForDriver_stub
   SceSysrootForKernel_stub
   SceDipswForDriver_stub
-  taihenModuleUtils_stub
-  taihenForKernel_stub
   SceSysconForDriver_stub
   SceCpuForDriver_stub
   ScePervasiveForDriver_stub
@@ -89,6 +86,6 @@ set_target_properties(bicr
 )
 
 vita_create_self(bicr.skprx bicr
-  CONFIG plugin/exports.yml
+  CONFIG kernel/exports.yml
   UNSELF
 )
