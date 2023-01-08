@@ -132,7 +132,7 @@ int abby_reset_nocalib(void) {
 
 	// Reboot via ernie, it should shut down instead if abby was reset
 	// NOTE: race, we need to do that before abby requests calibration data from ernie
-	kscePowerRequestErnieShutdown(ERNIE_SHUTDOWN_REBOOT);
+	ksceSysconErnieShutdown(ERNIE_SHUTDOWN_REBOOT);
 
 	while(1){};
 }
